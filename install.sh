@@ -91,6 +91,20 @@ echo "FONT=ter-v24n" > /etc/vconsole.conf
 #Set a system-wide default editor (example: neovim) ...
 echo "EDITOR=nano" > /etc/environment
 
+#Assign password to root ...
+passwd
+
+#Create a user account (example: foo) with superuser privileges ...
+
+useradd -m -G wheel -s /bin/bash kirkham
+passwd kirkham
+
+#Activate wheel group access for sudo ...
+sed -i "s/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/" /etc/sudoers
+
+#enable systemctl
+systemctl enable sshd.service
+systemctl enable NetworkManager
 
 
 MODULES=(crc32c-intel btrfs)
