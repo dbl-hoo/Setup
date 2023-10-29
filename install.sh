@@ -65,15 +65,10 @@ genfstab -U -p /mnt >> /mnt/etc/fstab
 #Chroot into the base system to configure ...
 arch-chroot /mnt /bin/bash
 
-#set timezone
-ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
-hwclock --systohc
-
 clear
-keyboardlayout="de-latin1"
-zoneinfo="Europe/Berlin"
+zoneinfo="America/New_York"
 hostname="arch"
-username="raabe"
+username="kirkham"
 # ------------------------------------------------------
 # Set System Time
 # ------------------------------------------------------
@@ -83,7 +78,7 @@ hwclock --systohc
 # Update reflector
 # ------------------------------------------------------
 echo "Start reflector..."
-reflector -c "Germany," -p https -a 3 --sort rate --save /etc/pacman.d/mirrorlist
+reflector -c "US," -p https -a 3 --sort rate --save /etc/pacman.d/mirrorlist
 # ------------------------------------------------------
 # Synchronize mirrors
 # ------------------------------------------------------
@@ -91,7 +86,7 @@ pacman -Syy
 # ------------------------------------------------------
 # Install Packages
 # ------------------------------------------------------
-pacman --noconfirm -S grub xdg-desktop-portal-wlr efibootmgr networkmanager network-manager-applet dialog wpa_supplicant mtools dosfstools base-devel linux-headers avahi xdg-user-dirs xdg-utils gvfs gvfs-smb nfs-utils inetutils dnsutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse pipewire-jack bash-completion openssh rsync reflector acpi acpi_call dnsmasq openbsd-netcat ipset firewalld flatpak sof-firmware nss-mdns acpid os-prober ntfs-3g terminus-font exa bat htop ranger zip unzip neofetch duf xorg xorg-xinit xclip grub-btrfs xf86-video-amdgpu xf86-video-nouveau xf86-video-intel xf86-video-qxl brightnessctl pacman-contrib inxi
+pacman --noconfirm -S grub efibootmgr networkmanager wpa_supplicant linux-headers avahi nfs-utils inetutils dnsutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse pipewire-jack bash-completion openssh rsync reflector acpi acpi_call ipset acpid os-prober ntfs-3g terminus-font exa bat htop m neofetch grub-btrfs xf86-video-amdgpu xf86-video-nouveau xf86-video-intel xf86-video-qxl htop man-db networkmanager openssh pacman-contrib reflector sudo terminus-font brightnessctl pacman-contrib inxi
 # ------------------------------------------------------
 # set lang utf8 US
 # ------------------------------------------------------
@@ -102,7 +97,7 @@ echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 # Set Keyboard
 # ------------------------------------------------------
 echo "FONT=ter-v18n" >> /etc/vconsole.conf
-echo "KEYMAP=$keyboardlayout" >> /etc/vconsole.conf
+#echo "KEYMAP=$keyboardlayout" >> /etc/vconsole.conf
 # ------------------------------------------------------
 # Set hostname and localhost
 # ------------------------------------------------------
@@ -135,37 +130,11 @@ systemctl enable fstrim.timer
 systemctl enable firewalld
 systemctl enable acpid
 
-htop man-db networkmanager openssh pacman-contrib reflector sudo terminus-font
-
-
-#set keyboard and localr
-echo en_US.UTF-8 UTF-8 >> /etc/locale.gen
-locale-gen
-echo LANG=en_US.UTF-8 >> /etc/locale.conf
-
-#set hostname
-echo arch > /etc/hostname
-
-#Network config
-cat >> /etc/hosts << EOF
-127.0.0.1	localhost
-::1		localhost
-127.0.1.1	myhostname.localdomain	arch
-EOF
-
-#Set a console font (example: terminus ter-224n) ...
-echo "FONT=ter-v24n" > /etc/vconsole.conf
 
 #Set a system-wide default editor (example: neovim) ...
 echo "EDITOR=nano" > /etc/environment
 
-#Assign password to root ...
-passwd
-
-#Create a user account (example: foo) with superuser privileges ...
-
 useradd -m -G wheel -s /bin/bash kirkham
-passwd kirkham
 
 #Activate wheel group access for sudo ...
 sed -i "s/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/" /etc/sudoers
