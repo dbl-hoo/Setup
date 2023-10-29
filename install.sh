@@ -50,7 +50,7 @@ mount -o ${sv_opts},subvol=@snapshots /dev/nvme0n1p3 /mnt/.snapshots
 mount -o ${sv_opts},subvol=@cache /dev/nvme0n1p3 /mnt/var/cache
 mount -o ${sv_opts},subvol=@libvirt /dev/nvme0n1p3 /mnt/var/lib/libvirt
 mount -o ${sv_opts},subvol=@log /dev/nvme0n1p3 /mnt/var/log
-mount -o ${sv_opts},subvol=@tmp /dev/mapper/cryptdev /mnt/var/tmp
+mount -o ${sv_opts},subvol=@tmp /dev/nvme0n1p3 /mnt/var/tmp
 
 #Mount ESP partition
 mkdir /mnt/efi
@@ -58,10 +58,42 @@ mount ${disk}p1 /mnt/efi
 
 pacman -Syy
 reflector --verbose --protocol https --latest 5 --sort rate --country US --country Germany --save /etc/pacman.d/mirrorlist
-pacstrap /mnt base base-devel intel-ucode btrfs-progs linux-zen linux-firmware htop man-db networkmanager openssh pacman-contrib reflector sudo terminus-font
+pacstrap /mnt base base-devel nano intel-ucode btrfs-progs linux-zen linux-firmware htop man-db networkmanager openssh pacman-contrib reflector sudo terminus-font
 
 #Fstab
 genfstab -U -p /mnt >> /mnt/etc/fstab
+
+#Chroot into the base system to configure ...
+arch-chroot /mnt /bin/bash
+
+#set timezone
+ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
+hwclock --systohc
+
+#set keyboard and localr
+echo en_US.UTF-8 UTF-8 >> /etc/locale.gen
+locale-gen
+echo LANG=en_US.UTF-8 >> /etc/locale.conf
+
+#set hostname
+echo arch > /etc/hostname
+
+#Network config
+cat >> /etc/hosts << EOF
+127.0.0.1	localhost
+::1		localhost
+127.0.1.1	myhostname.localdomain	arch
+EOF
+
+#Set a console font (example: terminus ter-224n) ...
+echo "FONT=ter-v24n" > /etc/vconsole.conf
+
+#Set a system-wide default editor (example: neovim) ...
+echo "EDITOR=nano" > /etc/environment
+
+
+
+MODULES=(crc32c-intel btrfs)
 
 
 
