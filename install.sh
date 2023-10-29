@@ -25,14 +25,13 @@ btrfs subvolume create /mnt/@libvirt
 btrfs subvolume create /mnt/@log
 btrfs subvolume create /mnt/@tmp
 
-1.14 Mount subvolumes
-
-Unmount the root partition ...
-
+#Unmount the root partition ...
 umount /mnt
+
 # Set mount options for the subvolumes ...
 
 export sv_opts="rw,noatime,compress-force=zstd:1,space_cache=v2"
+
 #Options:
 #noatime increases performance and reduces SSD writes.
 #compress-force=zstd:1 is optimal for NVME devices. Omit the :1 to use the default level of 3. Zstd accepts a value range of 1-15, with higher levels trading speed and memory for higher compression ratios.
@@ -58,7 +57,7 @@ mount ${disk}p1 /mnt/efi
 
 pacman -Syy
 reflector --verbose --protocol https --latest 5 --sort rate --country US --country Germany --save /etc/pacman.d/mirrorlist
-pacstrap /mnt base base-devel nano intel-ucode btrfs-progs linux-zen linux-firmware htop man-db networkmanager openssh pacman-contrib reflector sudo terminus-font
+pacstrap /mnt base base-devel nano intel-ucode btrfs-progs linux-zen linux-firmware reflector
 
 #Fstab
 genfstab -U -p /mnt >> /mnt/etc/fstab
@@ -69,6 +68,75 @@ arch-chroot /mnt /bin/bash
 #set timezone
 ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
 hwclock --systohc
+
+clear
+keyboardlayout="de-latin1"
+zoneinfo="Europe/Berlin"
+hostname="arch"
+username="raabe"
+# ------------------------------------------------------
+# Set System Time
+# ------------------------------------------------------
+ln -sf /usr/share/zoneinfo/$zoneinfo /etc/localtime
+hwclock --systohc
+# ------------------------------------------------------
+# Update reflector
+# ------------------------------------------------------
+echo "Start reflector..."
+reflector -c "Germany," -p https -a 3 --sort rate --save /etc/pacman.d/mirrorlist
+# ------------------------------------------------------
+# Synchronize mirrors
+# ------------------------------------------------------
+pacman -Syy
+# ------------------------------------------------------
+# Install Packages
+# ------------------------------------------------------
+pacman --noconfirm -S grub xdg-desktop-portal-wlr efibootmgr networkmanager network-manager-applet dialog wpa_supplicant mtools dosfstools base-devel linux-headers avahi xdg-user-dirs xdg-utils gvfs gvfs-smb nfs-utils inetutils dnsutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse pipewire-jack bash-completion openssh rsync reflector acpi acpi_call dnsmasq openbsd-netcat ipset firewalld flatpak sof-firmware nss-mdns acpid os-prober ntfs-3g terminus-font exa bat htop ranger zip unzip neofetch duf xorg xorg-xinit xclip grub-btrfs xf86-video-amdgpu xf86-video-nouveau xf86-video-intel xf86-video-qxl brightnessctl pacman-contrib inxi
+# ------------------------------------------------------
+# set lang utf8 US
+# ------------------------------------------------------
+echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+locale-gen
+echo "LANG=en_US.UTF-8" >> /etc/locale.conf
+# ------------------------------------------------------
+# Set Keyboard
+# ------------------------------------------------------
+echo "FONT=ter-v18n" >> /etc/vconsole.conf
+echo "KEYMAP=$keyboardlayout" >> /etc/vconsole.conf
+# ------------------------------------------------------
+# Set hostname and localhost
+# ------------------------------------------------------
+echo "$hostname" >> /etc/hostname
+echo "127.0.0.1 localhost" >> /etc/hosts
+echo "::1       localhost" >> /etc/hosts
+echo "127.0.1.1 $hostname.localdomain $hostname" >> /etc/hosts
+clear
+# ------------------------------------------------------
+# Set Root Password
+# ------------------------------------------------------
+echo "Set root password"
+passwd root
+# ------------------------------------------------------
+# Add User
+# ------------------------------------------------------
+echo "Add user $username"
+useradd -m -G wheel $username
+passwd $username
+# ------------------------------------------------------
+# Enable Services
+# ------------------------------------------------------
+systemctl enable NetworkManager
+systemctl enable bluetooth
+systemctl enable cups.service
+systemctl enable sshd
+systemctl enable avahi-daemon
+systemctl enable reflector.timer
+systemctl enable fstrim.timer
+systemctl enable firewalld
+systemctl enable acpid
+
+htop man-db networkmanager openssh pacman-contrib reflector sudo terminus-font
+
 
 #set keyboard and localr
 echo en_US.UTF-8 UTF-8 >> /etc/locale.gen
