@@ -75,7 +75,7 @@ mount $sda1 /mnt/efi
 
 pacman -Syy
 reflector --verbose --protocol https --latest 5 --sort rate --country US --country Germany --save /etc/pacman.d/mirrorlist
-pacstrap /mnt base base-devel nano intel-ucode btrfs-progs linux-zen linux-firmware reflector
+pacstrap /mnt base base-devel intel-ucode btrfs-progs linux-zen linux-firmware reflector linux-zen-headers
 
 #Fstab
 genfstab -U -p /mnt >> /mnt/etc/fstab
@@ -104,7 +104,7 @@ pacman -Syy
 # ------------------------------------------------------
 # Install Packages
 # ------------------------------------------------------
-pacman --noconfirm -S grub efibootmgr dracut vivaldi networkmanager wpa_supplicant linux-headers avahi nfs-utils inetutils dnsutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse pipewire-jack bash-completion openssh rsync reflector acpi acpi_call ipset acpid os-prober ntfs-3g terminus-font exa bat htop m neofetch grub-btrfs xf86-video-amdgpu xf86-video-nouveau xf86-video-intel xf86-video-qxl htop man-db networkmanager openssh pacman-contrib reflector sudo terminus-font brightnessctl pacman-contrib inxi
+pacman --noconfirm -S grub efibootmgr nano dracut vivaldi wpa_supplicant avahi nfs-utils inetutils dnsutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse pipewire-jack bash-completion openssh rsync reflector acpi acpi_call ipset acpid os-prober ntfs-3g terminus-font htop neofetch grub-btrfs xf86-video-amdgpu xf86-video-nouveau xf86-video-intel xf86-video-qxl man-db openssh pacman-contrib reflector sudo terminus-font brightnessctl pacman-contrib inxi
 # ------------------------------------------------------
 # set lang utf8 US
 # ------------------------------------------------------
