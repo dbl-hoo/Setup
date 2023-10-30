@@ -1,22 +1,5 @@
+#!/bin/bash
 clear
-
-                                                                                          
-                                                                                           
-echo "       _                     ___                ____                        __   "          
-echo "      dM.                    `MM               6MMMMb/                     69M68b "        
-echo "     ,MMb                     MM              8P    YM                    6M' Y89     "     
-echo "     d'YM.   ___  __   ____   MM  __         6M      Y   _____  ___  __  _MM_____   __    " 
-echo "    ,P `Mb   `MM 6MM  6MMMMb. MM 6MMb        MM         6MMMMMb `MM 6MMb MMMMM`MM  6MMbMMM "
-echo "    d'  YM.   MM69 " 6M'   Mb MMM9 `Mb       MM        6M'   `Mb MMM9 `Mb MM   MM 6M'`Mb   "
-echo "   ,P   `Mb   MM'    MM    `' MM'   MM       MM        MM     MM MM'   MM MM   MM MM  MM   "
-echo "   d'    YM.  MM     MM       MM    MM       MM        MM     MM MM    MM MM   MM YM.,M9   "
-echo "  ,MMMMMMMMb  MM     MM       MM    MM       YM      6 MM     MM MM    MM MM   MM  YMM9    "
-echo "  d'      YM. MM     YM.   d9 MM    MM        8b    d9 YM.   ,M9 MM    MM MM   MM (M       "
-echo "  _dM_     _dMM_MM_     YMMMM9 _MM_  _MM_        YMMMM9   YMMMMM9 _MM_  _MM_MM_ _MM_ YMMMMb. "
-echo "                                                                                  6M    Yb "
-echo "                                                                                  YM.   d9 "
-echo "                                                                                   YMMMM9  "
-
 
 # ------------------------------------------------------
 # Set System Time
