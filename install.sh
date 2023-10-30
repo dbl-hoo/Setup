@@ -36,9 +36,13 @@ lsblk
 read -p "Enter the name of the EFI partition (eg. sda1): " sda1
 read -p "Enter the name of the ROOT partition (eg. sda2): " sda2
 
+#format efi parition
+mkfs.fat -F 32 /dev/$sda1
+
 #formst root partition btrfs
-# using existig efi partition
 mkfs.btrfs -f -L arch /dev/$sda2
+
+read -p "Press any key to resume ..."
 
 #mount btrfs, create subvolumes and unmount
 mount /dev/$sda2 /mnt
@@ -81,7 +85,7 @@ echo "file system created"
 
 pacman -Syy
 reflector --verbose --protocol https --latest 5 --sort rate --country US --country Germany --save /etc/pacman.d/mirrorlist
-pacstrap /mnt base base-devel intel-ucode btrfs-progs linux-zen linux-firmware reflector linux-zen-headers
+pacstrap /mnt base base-devel intel-ucode btrfs-progs linux linux-firmware reflector 
 
 echo "starting FSTAB"
 #Fstab
@@ -89,6 +93,9 @@ genfstab -U /mnt >> /mnt/etc/fstab
 echo "finished FSTAB"
 cat /mnt/etc/fstab
 #Chroot into the base system to configure ...
+
+read -p "Pausing for a breath...Press any key to resume ..."
+
 arch-chroot /mnt
 
 clear
@@ -110,7 +117,7 @@ pacman -Syy
 # ------------------------------------------------------
 # Install Packages
 # ------------------------------------------------------
-pacman --noconfirm -S grub efibootmgr nano dracut vivaldi wpa_supplicant avahi nfs-utils inetutils dnsutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse pipewire-jack bash-completion openssh rsync reflector acpi acpi_call ipset acpid os-prober ntfs-3g terminus-font htop neofetch grub-btrfs xf86-video-amdgpu xf86-video-nouveau xf86-video-intel xf86-video-qxl man-db openssh pacman-contrib reflector sudo terminus-font brightnessctl pacman-contrib inxi
+pacman --noconfirm -S linux-headers grub efibootmgr nano dracut vivaldi wpa_supplicant avahi nfs-utils inetutils dnsutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse pipewire-jack bash-completion openssh rsync reflector acpi acpi_call ipset acpid os-prober ntfs-3g terminus-font htop neofetch grub-btrfs xf86-video-amdgpu xf86-video-nouveau xf86-video-intel xf86-video-qxl man-db openssh pacman-contrib reflector sudo terminus-font brightnessctl pacman-contrib inxi
 # ------------------------------------------------------
 # set lang utf8 US
 # ------------------------------------------------------
