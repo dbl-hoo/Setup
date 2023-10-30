@@ -81,7 +81,7 @@ pacstrap /mnt base base-devel intel-ucode btrfs-progs linux-zen linux-firmware r
 genfstab -U -p /mnt >> /mnt/etc/fstab
 
 #Chroot into the base system to configure ...
-arch-chroot /mnt /bin/bash
+arch-chroot /mnt
 
 clear
 zoneinfo="America/New_York"
