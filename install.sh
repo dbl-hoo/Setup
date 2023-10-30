@@ -1,6 +1,16 @@
 #!/bin/bash
 clear
 
+#!/bin/bash
+clear
+echo "    _             _       ___           _        _ _ "
+echo "   / \   _ __ ___| |__   |_ _|_ __  ___| |_ __ _| | |"
+echo "  / _ \ | '__/ __| '_ \   | || '_ \/ __| __/ _' | | |"
+echo " / ___ \| | | (__| | | |  | || | | \__ \ || (_| | | |"
+echo "/_/   \_\_|  \___|_| |_| |___|_| |_|___/\__\__,_|_|_|"
+echo ""
+
+
 #set wifi
 iwctl station wlan0 connect Kirkham --passphrase redoctober3290
 
@@ -11,15 +21,20 @@ setfont ter-v24n
 timedatectl set-ntp true
 timedatectl status
 
-#disk variable
-export disk="/dev/nvme0n1"
+# ------------------------------------------------------
+# Enter partition names
+# ------------------------------------------------------
+lsblk
+read -p "Enter the name of the EFI partition (eg. sda1): " sda1
+read -p "Enter the name of the ROOT partition (eg. sda2): " sda2
+
 
 #formst root partition btrfs
 # using existig efi partition
-mkfs.btrfs -f -L arch /dev/nvme0n1p3
+mkfs.btrfs -f -L arch /dev/$sda2
 
 #mount btrfs, create subvolumes and unmount
-mount /dev/nvme0n1p3 /mnt
+mount /dev/$sda2 /mnt
 btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
 btrfs subvolume create /mnt/@snapshots
@@ -41,22 +56,22 @@ export sv_opts="rw,noatime,compress-force=zstd:1,space_cache=v2"
 #space_cache=v2 creates cache in memory for greatly improved performance.
 #Mount the new BTRFS root subvolume with subvol=@ ...
 
-mount -o ${sv_opts},subvol=@ /dev/nvme0n1p3 /mnt
+mount -o ${sv_opts},subvol=@ /dev/$sda2 /mnt
 #Create mountpoints for the additional subvolumes ...
 
 mkdir -p /mnt/{home,.snapshots,var/cache,var/lib/libvirt,var/log,var/tmp}
 #Mount the additional subvolumes ...
 
-mount -o ${sv_opts},subvol=@home /dev/nvme0n1p3 /mnt/home
-mount -o ${sv_opts},subvol=@snapshots /dev/nvme0n1p3 /mnt/.snapshots
-mount -o ${sv_opts},subvol=@cache /dev/nvme0n1p3 /mnt/var/cache
-mount -o ${sv_opts},subvol=@libvirt /dev/nvme0n1p3 /mnt/var/lib/libvirt
-mount -o ${sv_opts},subvol=@log /dev/nvme0n1p3 /mnt/var/log
-mount -o ${sv_opts},subvol=@tmp /dev/nvme0n1p3 /mnt/var/tmp
+mount -o ${sv_opts},subvol=@home /dev/$sda2 /mnt/home
+mount -o ${sv_opts},subvol=@snapshots /dev/$sda2 /mnt/.snapshots
+mount -o ${sv_opts},subvol=@cache /dev/$sda2 /mnt/var/cache
+mount -o ${sv_opts},subvol=@libvirt /dev/$sda2 /mnt/var/lib/libvirt
+mount -o ${sv_opts},subvol=@log /dev/$sda2 /mnt/var/log
+mount -o ${sv_opts},subvol=@tmp /dev/$sda2 /mnt/var/tmp
 
 #Mount ESP partition
 mkdir /mnt/efi
-mount ${disk}p1 /mnt/efi
+mount $sda1 /mnt/efi
 
 pacman -Syy
 reflector --verbose --protocol https --latest 5 --sort rate --country US --country Germany --save /etc/pacman.d/mirrorlist
@@ -89,7 +104,7 @@ pacman -Syy
 # ------------------------------------------------------
 # Install Packages
 # ------------------------------------------------------
-pacman --noconfirm -S grub efibootmgr networkmanager wpa_supplicant linux-headers avahi nfs-utils inetutils dnsutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse pipewire-jack bash-completion openssh rsync reflector acpi acpi_call ipset acpid os-prober ntfs-3g terminus-font exa bat htop m neofetch grub-btrfs xf86-video-amdgpu xf86-video-nouveau xf86-video-intel xf86-video-qxl htop man-db networkmanager openssh pacman-contrib reflector sudo terminus-font brightnessctl pacman-contrib inxi
+pacman --noconfirm -S grub efibootmgr dracut networkmanager wpa_supplicant linux-headers avahi nfs-utils inetutils dnsutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse pipewire-jack bash-completion openssh rsync reflector acpi acpi_call ipset acpid os-prober ntfs-3g terminus-font exa bat htop m neofetch grub-btrfs xf86-video-amdgpu xf86-video-nouveau xf86-video-intel xf86-video-qxl htop man-db networkmanager openssh pacman-contrib reflector sudo terminus-font brightnessctl pacman-contrib inxi
 # ------------------------------------------------------
 # set lang utf8 US
 # ------------------------------------------------------
@@ -142,12 +157,32 @@ useradd -m -G wheel -s /bin/bash kirkham
 #Activate wheel group access for sudo ...
 sed -i "s/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/" /etc/sudoers
 
-#enable systemctl
-systemctl enable sshd.service
-systemctl enable NetworkManager
-
-
+#set modules
 MODULES=(crc32c-intel btrfs)
 
+#set hooks
+HOOKS=(base udev keyboard autodetect keymap consolefont modconf block filesystems fsck)
 
+#create initramfs
+dracut --hostonly --no-hostonly-cmdline /boot/initramfs-linux.img
+dracut -N --force /boot/initramfs-linux-fallback.img
 
+#install grub
+grub-install --target=x86_64-efi --bootloader-id=Arch --efi-directory=/boot/efi/
+grub-mkconfig -o /boot/grub/grub.cfg
+sed -i '#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false' /etc/default/grub
+
+exit
+umount -R /mnt
+
+clear
+echo "     _                   "
+echo "  __| | ___  _ __   ___  "
+echo " / _' |/ _ \| '_ \ / _ \ "
+echo "| (_| | (_) | | | |  __/ "
+echo " \__,_|\___/|_| |_|\___| "
+echo "                         "
+echo ""
+
+read -p "Press any key to resume ..."
+reboot -h now
