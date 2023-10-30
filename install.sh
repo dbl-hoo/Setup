@@ -1,3 +1,6 @@
+#!/bin/bash
+clear
+
 #set wifi
 iwctl station wlan0 connect Kirkham --passphrase redoctober3290
 
