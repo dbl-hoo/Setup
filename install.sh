@@ -14,8 +14,16 @@ echo ""
 #set wifi
 iwctl station wlan0 connect Kirkham --passphrase redoctober3290
 
+#set variables
+
+zoneinfo="America/New_York"
+hostname="arch"
+
+# Main user to create (by default, added to wheel group, and others).
+USER_NAME='kirkham'
+
 # larger font
-setfont ter-v24n
+# setfont ter-v24n
 
 #set time and date
 timedatectl set-ntp true
@@ -27,7 +35,6 @@ timedatectl status
 lsblk
 read -p "Enter the name of the EFI partition (eg. sda1): " sda1
 read -p "Enter the name of the ROOT partition (eg. sda2): " sda2
-
 
 #formst root partition btrfs
 # using existig efi partition
@@ -54,39 +61,38 @@ export sv_opts="rw,noatime,compress-force=zstd:1,space_cache=v2"
 #noatime increases performance and reduces SSD writes.
 #compress-force=zstd:1 is optimal for NVME devices. Omit the :1 to use the default level of 3. Zstd accepts a value range of 1-15, with higher levels trading speed and memory for higher compression ratios.
 #space_cache=v2 creates cache in memory for greatly improved performance.
+
 #Mount the new BTRFS root subvolume with subvol=@ ...
-
 mount -o ${sv_opts},subvol=@ /dev/$sda2 /mnt
+
 #Create mountpoints for the additional subvolumes ...
-
 mkdir -p /mnt/{home,.snapshots,var/cache,var/lib/libvirt,var/log,var/tmp}
-#Mount the additional subvolumes ...
 
+#Mount the additional subvolumes ...
 mount -o ${sv_opts},subvol=@home /dev/$sda2 /mnt/home
 mount -o ${sv_opts},subvol=@snapshots /dev/$sda2 /mnt/.snapshots
 mount -o ${sv_opts},subvol=@cache /dev/$sda2 /mnt/var/cache
 mount -o ${sv_opts},subvol=@libvirt /dev/$sda2 /mnt/var/lib/libvirt
 mount -o ${sv_opts},subvol=@log /dev/$sda2 /mnt/var/log
 mount -o ${sv_opts},subvol=@tmp /dev/$sda2 /mnt/var/tmp
+mount -o defaults,noatime -m /dev/$sda1 /mnt/boot/efi
 
-#Mount ESP partition
-mkdir /mnt/efi
-mount $sda1 /mnt/efi
+echo "file system created"
 
 pacman -Syy
 reflector --verbose --protocol https --latest 5 --sort rate --country US --country Germany --save /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel intel-ucode btrfs-progs linux-zen linux-firmware reflector linux-zen-headers
 
+echo "starting FSTAB"
 #Fstab
-genfstab -U -p /mnt >> /mnt/etc/fstab
-
+genfstab -U /mnt >> /mnt/etc/fstab
+echo "finished FSTAB"
+cat /mnt/etc/fstab
 #Chroot into the base system to configure ...
 arch-chroot /mnt
 
 clear
-zoneinfo="America/New_York"
-hostname="arch"
-username="kirkham"
+
 # ------------------------------------------------------
 # Set System Time
 # ------------------------------------------------------
@@ -132,9 +138,9 @@ passwd root
 # ------------------------------------------------------
 # Add User
 # ------------------------------------------------------
-echo "Add user $username"
-useradd -m -G wheel $username
-passwd $username
+echo "Add user $USER_NAME"
+useradd -m -G wheel $USER_NAME
+passwd $USER_NAME
 # ------------------------------------------------------
 # Enable Services
 # ------------------------------------------------------
