@@ -65,6 +65,9 @@ systemctl enable acpid
 
 #Set a system-wide default editor (example: neovim) ...
 echo "EDITOR=nano" > /etc/environment
+#set font
+echo "FONT=ter-v24n" > /etc/vconsole.conf
+
 
 useradd -m -G wheel -s /bin/bash kirkham
 
