@@ -71,7 +71,7 @@ read -p "Press any key to resume ..."
 
 pacman -Syy
 reflector --verbose --protocol https --latest 5 --sort rate --country US --country Germany --save /etc/pacman.d/mirrorlist
-pacstrap /mnt base base-devel linux-headers intel-ucode btrfs-progs linux-zen linux-zen-firmware reflector networkmanager
+pacstrap /mnt base base-devel linux-headers intel-ucode btrfs-progs linux linux-firmware reflector networkmanager
 
 #copy chroot script
 cp /Archinstall/config.sh /mnt/config.sh
