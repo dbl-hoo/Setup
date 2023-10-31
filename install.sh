@@ -53,7 +53,7 @@ mount -o defaults,noatime -m /dev/$sda1 /mnt/boot/efi
 
 pacman -Syy
 reflector --verbose --protocol https --latest 5 --sort rate --country US --country Germany --save /etc/pacman.d/mirrorlist
-pacstrap /mnt base base-devel linux-headers intel-ucode btrfs-progs linux linux-firmware
+pacstrap /mnt base base-devel linux-headers intel-ucode btrfs-progs linux-zen linux-firmware
 
 #Fstab
 genfstab -U /mnt >> /mnt/etc/fstab
