@@ -19,7 +19,7 @@ pacman -Syy
 # ------------------------------------------------------
 # Install Packages
 # ------------------------------------------------------
-pacman --noconfirm -S base-devel linux-headers grub efibootmgr networkmanager wpa-supplicant git xdg-{utils,user-dirs} pipewire pipewire-{alsa,jack,media-session,pulse} alsa-utils acpi acpi_call bluez bluez-utils grub mesa os-prober cups hplip openssh grub-btrfs htop neofetch grub-btrfs xf86-video-amdgpu man-db  pacman-contrib reflector 
+pacman --noconfirm -S base-devel linux-headers grub efibootmgr networkmanager wpa_supplicant git xdg-{utils,user-dirs} pipewire pipewire-{alsa,jack,media-session,pulse} alsa-utils acpi acpi_call bluez bluez-utils grub mesa os-prober cups hplip openssh grub-btrfs htop neofetch xf86-video-amdgpu man-db pacman-contrib reflector 
 # ------------------------------------------------------
 # set lang utf8 US
 # ------------------------------------------------------
