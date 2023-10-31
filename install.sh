@@ -1,8 +1,6 @@
 #!/bin/bash
 clear
 
-#!/bin/bash
-clear
 echo "    _             _       ___           _        _ _ "
 echo "   / \   _ __ ___| |__   |_ _|_ __  ___| |_ __ _| | |"
 echo "  / _ \ | '__/ __| '_ \   | || '_ \/ __| __/ _' | | |"
@@ -40,7 +38,7 @@ read -p "Enter the name of the ROOT partition (eg. sda2): " sda2
 mkfs.fat -F 32 /dev/$sda1
 
 #formst root partition btrfs
-mkfs.btrfs -f -L arch /dev/$sda2
+mkfs.btrfs -f /dev/$sda2
 
 read -p "Press any key to resume ..."
 
@@ -57,29 +55,15 @@ btrfs subvolume create /mnt/@tmp
 #Unmount the root partition ...
 umount /mnt
 
-# Set mount options for the subvolumes ...
 
-export sv_opts="rw,noatime,compress-force=zstd:1,space_cache=v2"
-
-#Options:
-#noatime increases performance and reduces SSD writes.
-#compress-force=zstd:1 is optimal for NVME devices. Omit the :1 to use the default level of 3. Zstd accepts a value range of 1-15, with higher levels trading speed and memory for higher compression ratios.
-#space_cache=v2 creates cache in memory for greatly improved performance.
-
-#Mount the new BTRFS root subvolume with subvol=@ ...
-mount -o ${sv_opts},subvol=@ /dev/$sda2 /mnt
-
-#Create mountpoints for the additional subvolumes ...
-mkdir -p /mnt/{home,.snapshots,var/cache,var/lib/libvirt,var/log,var/tmp}
-
-#Mount the additional subvolumes ...
-mount -o ${sv_opts},subvol=@home /dev/$sda2 /mnt/home
-mount -o ${sv_opts},subvol=@snapshots /dev/$sda2 /mnt/.snapshots
-mount -o ${sv_opts},subvol=@cache /dev/$sda2 /mnt/var/cache
-mount -o ${sv_opts},subvol=@libvirt /dev/$sda2 /mnt/var/lib/libvirt
-mount -o ${sv_opts},subvol=@log /dev/$sda2 /mnt/var/log
-mount -o ${sv_opts},subvol=@tmp /dev/$sda2 /mnt/var/tmp
-mount -o defaults,noatime -m /dev/$sda1 /mnt/boot/efi
+mount -o subvol=/@,defaults,noatime,compress=zstd /dev/$sda2 /mnt 
+mount -o subvol=/@home,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/home
+mount -o subvol=/@snapshots,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/.snapshots
+mount -o subvol=/@cache,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/var/cache 
+mount -o subvol=/@liberty,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/var/lib/libvirt
+mount -o subvol=/@log,defaults,noatime,compress=zstd -m /dev/$sda2  /mnt/var/log
+mount -o subvol=/@tmp,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/var/tmp
+mount -o defaults,noatime -m /dev/$sda1 /mnt/boot/efi 
 
 echo "file system created"
 
@@ -88,7 +72,7 @@ reflector --verbose --protocol https --latest 5 --sort rate --country US --count
 pacstrap /mnt base base-devel linux-headers intel-ucode btrfs-progs linux-zen linux-zen-firmware reflector networkmanager
 
 #copy chroot script
-cp config.sh /mnt
+cp /Archinstall/config.sh /mnt/config.sh
 
 echo "starting FSTAB"
 #Fstab
