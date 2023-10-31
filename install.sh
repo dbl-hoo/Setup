@@ -10,18 +10,7 @@ echo ""
 
 
 #set wifi
-iwctl station wlan0 connect Kirkham --passphrase redoctober3290
-
-#set variables
-
-zoneinfo="America/New_York"
-hostname="arch"
-
-# Main user to create (by default, added to wheel group, and others).
-USER_NAME='kirkham'
-
-# larger font
-# setfont ter-v24n
+#iwctl station wlan0 connect Kirkham --passphrase redoctober3290
 
 #set time and date
 timedatectl set-ntp true
@@ -40,8 +29,6 @@ mkfs.fat -F 32 /dev/$sda1
 #formst root partition btrfs
 mkfs.btrfs -f /dev/$sda2
 
-read -p "Press any key to resume ..."
-
 #mount btrfs, create subvolumes and unmount
 mount /dev/$sda2 /mnt
 btrfs subvolume create /mnt/@
@@ -55,8 +42,6 @@ btrfs subvolume create /mnt/@tmp
 #Unmount the root partition ...
 umount /mnt
 
-read -p "Press any key to resume ..."
-
 mount -o subvol=/@,defaults,noatime,compress=zstd /dev/$sda2 /mnt 
 mount -o subvol=/@home,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/home
 mount -o subvol=/@snapshots,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/.snapshots
@@ -66,25 +51,15 @@ mount -o subvol=/@log,defaults,noatime,compress=zstd -m /dev/$sda2  /mnt/var/log
 mount -o subvol=/@tmp,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/var/tmp
 mount -o defaults,noatime -m /dev/$sda1 /mnt/boot/efi 
 
-echo "file system created"
-read -p "Press any key to resume ..."
-
 pacman -Syy
 reflector --verbose --protocol https --latest 5 --sort rate --country US --country Germany --save /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel linux-headers intel-ucode btrfs-progs linux linux-firmware reflector networkmanager
 
-echo "starting FSTAB"
 #Fstab
 genfstab -U /mnt >> /mnt/etc/fstab
-echo "finished FSTAB"
-cat /mnt/etc/fstab
 
-read -p "Pausing for a breath...Press any key to resume ..."
-
-#copy chroot script
+#copy chroot script and execute
 mkdir /mnt/install
 cp config.sh /mnt/install/
-
 arch-chroot /mnt ./install/config.sh
-
 

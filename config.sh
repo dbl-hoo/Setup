@@ -59,7 +59,6 @@ systemctl enable sshd
 systemctl enable avahi-daemon
 systemctl enable reflector.timer
 systemctl enable fstrim.timer
-systemctl enable firewalld
 systemctl enable acpid
 
 
@@ -85,9 +84,6 @@ dracut -N --force /boot/initramfs-linux-fallback.img
 grub-install --target=x86_64-efi --bootloader-id=Arch --efi-directory=/boot/efi/
 grub-mkconfig -o /boot/grub/grub.cfg
 sed -i '#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false' /etc/default/grub
-
-exit
-umount -R /mnt
 
 clear
 echo "     _                   "
