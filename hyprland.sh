@@ -31,3 +31,4 @@ done
 
 sudo pacman -S hyprland hyprpaper ttf-font-awesome waybar wofi kitty alacritty thunar xdg-desktop-portal-hyprland qt5-wayland qt6-wayland 
 yay -S swaync rofi-lbonn-wayland polkit-dumb-agent-git swww waypaper-git
+cp /mnt/install/hyprland.conf ~/.config/hypr/hyprland.conf
