@@ -19,7 +19,7 @@ pacman -Syy
 # ------------------------------------------------------
 # Install Packages
 # ------------------------------------------------------
-pacman --noconfirm -S base-devel linux-headers grub efibootmgr networkmanager wpa_supplicant git xdg-{utils,user-dirs} pipewire pipewire-{alsa,jack,media-session,pulse} alsa-utils acpi acpi_call bluez bluez-utils grub mesa os-prober cups hplip openssh grub-btrfs htop neofetch xf86-video-amdgpu man-db pacman-contrib reflector 
+pacman --noconfirm -S base-devel linux-headers grub efibootmgr networkmanager wpa_supplicant git xdg-{utils,user-dirs} pipewire pipewire-{alsa,jack,media-session,pulse} alsa-utils acpi acpi_call bluez bluez-utils grub mesa os-prober cups hplip openssh grub-btrfs htop neofetch xf86-video-amdgpu man-db pacman-contrib reflector acpid
 # ------------------------------------------------------
 # set lang utf8 US
 # ------------------------------------------------------
@@ -29,7 +29,7 @@ echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 # ------------------------------------------------------
 # Set Keyboard
 # ------------------------------------------------------
-echo "FONT=ter-v18n" >> /etc/vconsole.conf
+touch /etc/vconsole.conf
 #echo "KEYMAP=$keyboardlayout" >> /etc/vconsole.conf
 # ------------------------------------------------------
 # Set hostname and localhost
