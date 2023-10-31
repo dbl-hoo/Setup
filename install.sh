@@ -61,6 +61,9 @@ genfstab -U /mnt >> /mnt/etc/fstab
 #copy chroot script and execute
 mkdir /mnt/install
 cp config.sh /mnt/install/
+cp hyprland.sh /mnt/install/
+cp wallpaper.sh /mnt/install/
+cp hyprland.conf /mnt/install/
 arch-chroot /mnt ./install/config.sh
 
 exit
