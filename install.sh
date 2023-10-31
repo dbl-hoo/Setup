@@ -55,6 +55,7 @@ btrfs subvolume create /mnt/@tmp
 #Unmount the root partition ...
 umount /mnt
 
+read -p "Press any key to resume ..."
 
 mount -o subvol=/@,defaults,noatime,compress=zstd /dev/$sda2 /mnt 
 mount -o subvol=/@home,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/home
@@ -66,6 +67,7 @@ mount -o subvol=/@tmp,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/var/tmp
 mount -o defaults,noatime -m /dev/$sda1 /mnt/boot/efi 
 
 echo "file system created"
+read -p "Press any key to resume ..."
 
 pacman -Syy
 reflector --verbose --protocol https --latest 5 --sort rate --country US --country Germany --save /etc/pacman.d/mirrorlist
