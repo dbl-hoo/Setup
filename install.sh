@@ -73,9 +73,6 @@ pacman -Syy
 reflector --verbose --protocol https --latest 5 --sort rate --country US --country Germany --save /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel linux-headers intel-ucode btrfs-progs linux linux-firmware reflector networkmanager
 
-#copy chroot script
-cp /Archinstall/config.sh /mnt/config.sh
-
 echo "starting FSTAB"
 #Fstab
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -84,9 +81,10 @@ cat /mnt/etc/fstab
 
 read -p "Pausing for a breath...Press any key to resume ..."
 
-arch-chroot /mnt ./config.sh
+#copy chroot script
+mkdir /mnt/install
+cp config.sh /mnt/install/
 
-# unmount partitions
-umount /mnt/boot/efi /mnt
+arch-chroot /mnt ./install/config.sh
 
 

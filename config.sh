@@ -4,7 +4,7 @@ clear
 # ------------------------------------------------------
 # Set System Time
 # ------------------------------------------------------
-ln -sf /usr/share/zoneinfo/$zoneinfo /etc/localtime
+ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
 hwclock --systohc
 # ------------------------------------------------------
 # Update reflector
@@ -33,10 +33,10 @@ echo "FONT=ter-v18n" >> /etc/vconsole.conf
 # ------------------------------------------------------
 # Set hostname and localhost
 # ------------------------------------------------------
-echo "$hostname" >> /etc/hostname
+echo "arch" >> /etc/hostname
 echo "127.0.0.1 localhost" >> /etc/hosts
 echo "::1       localhost" >> /etc/hosts
-echo "127.0.1.1 $hostname.localdomain $hostname" >> /etc/hosts
+echo "127.0.1.1 arch.localdomain arch" >> /etc/hosts
 clear
 # ------------------------------------------------------
 # Set Root Password
@@ -46,9 +46,9 @@ passwd
 # ------------------------------------------------------
 # Add User
 # ------------------------------------------------------
-echo "Add user $USER_NAME"
-useradd -m -G wheel $USER_NAME
-passwd $USER_NAME
+
+useradd -m -G wheel kirkham
+passwd kirkham
 # ------------------------------------------------------
 # Enable Services
 # ------------------------------------------------------
