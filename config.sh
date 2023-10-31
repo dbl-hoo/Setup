@@ -10,7 +10,8 @@ hwclock --systohc
 # Update reflector
 # ------------------------------------------------------
 echo "Start reflector..."
-reflector -c "US," -p https -a 3 --sort rate --save /etc/pacman.d/mirrorlist
+reflector -f 5 --country 'United States' --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+
 # ------------------------------------------------------
 # Synchronize mirrors
 # ------------------------------------------------------
@@ -18,7 +19,7 @@ pacman -Syy
 # ------------------------------------------------------
 # Install Packages
 # ------------------------------------------------------
-pacman --noconfirm -S grub mesa efibootmgr nano dracut vivaldi wpa_supplicant avahi nfs-utils inetutils dnsutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse pipewire-jack bash-completion openssh rsync reflector acpi acpi_call ipset acpid os-prober ntfs-3g terminus-font htop neofetch grub-btrfs xf86-video-amdgpu xf86-video-nouveau xf86-video-intel xf86-video-qxl man-db openssh pacman-contrib reflector sudo terminus-font brightnessctl pacman-contrib inxi
+pacman --noconfirm -S base-devel linux-headers grub efibootmgr networkmanager wpa-supplicant git xdg-{utils,user-dirs} pipewire pipewire-{alsa,jack,media-session,pulse} alsa-utils acpi acpi_call bluez bluez-utils grub mesa os-prober cups hplip openssh grub-btrfs htop neofetch grub-btrfs xf86-video-amdgpu man-db  pacman-contrib reflector 
 # ------------------------------------------------------
 # set lang utf8 US
 # ------------------------------------------------------
@@ -95,4 +96,3 @@ echo "                         "
 echo ""
 
 read -p "Press any key to resume ..."
-reboot -h now
