@@ -60,7 +60,7 @@ mount -o subvol=/@,defaults,noatime,compress=zstd /dev/$sda2 /mnt
 mount -o subvol=/@home,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/home
 mount -o subvol=/@snapshots,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/.snapshots
 mount -o subvol=/@cache,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/var/cache 
-mount -o subvol=/@liberty,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/var/lib/libvirt
+mount -o subvol=/@libvirt,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/var/lib/libvirt
 mount -o subvol=/@log,defaults,noatime,compress=zstd -m /dev/$sda2  /mnt/var/log
 mount -o subvol=/@tmp,defaults,noatime,compress=zstd -m /dev/$sda2 /mnt/var/tmp
 mount -o defaults,noatime -m /dev/$sda1 /mnt/boot/efi 
