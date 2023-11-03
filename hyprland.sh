@@ -30,7 +30,7 @@ done
 # -----------------------------------------------------
 
 pacman --noconfirm -S hyprland qt5-wayland qt6-wayland xdg-desktop-portal-hyprland polkit-gnome
-yay --noconfirm -S 	waybar-hyprland-cava-git swaync
+yay --noconfirm -S waybar-hyprland-cava-git swaync
 
 echo "DONE!"
 
