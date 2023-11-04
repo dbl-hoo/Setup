@@ -29,8 +29,8 @@ done
 # Install zram
 # -----------------------------------------------------
 
-pacman --noconfirm -S hyprland qt5-wayland qt6-wayland xdg-desktop-portal-hyprland polkit-gnome
-yay --noconfirm -S waybar-hyprland-cava-git swaync swww
+pacman --noconfirm -S hyprland qt5-wayland qt6-wayland xdg-desktop-portal-hyprland polkit-gnome swayidle
+yay --noconfirm -S waybar-hyprland-cava-git swaync swww rofi-lbonn-wayland-git swaylock-effects
 
 echo "DONE!"
 
