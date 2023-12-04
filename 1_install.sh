@@ -52,7 +52,7 @@ mount -o subvol=/@tmp,defaults,noatime,compress=zstd:1 -m /dev/$sda2 /mnt/var/tm
 mount -o defaults,noatime -m /dev/$sda1 /mnt/boot/efi 
 
 pacman -Syy
-reflector --verbose --protocol https --latest 5 --sort rate --country US --country Germany --save /etc/pacman.d/mirrorlist
+reflector -c "US" -f 12 -l 10 -n 12 --save /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel linux-headers intel-ucode btrfs-progs linux-zen linux-firmware
 
 #Fstab
