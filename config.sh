@@ -7,10 +7,9 @@
 # | |__| (_) | | | |  _| | (_| | |_| | | | (_| | |_| | (_) | | | |
 #  \____\___/|_| |_|_| |_|\__, |\__,_|_|  \__,_|\__|_|\___/|_| |_|
 #                         |___/                                   
-# by Stephan Raabe (2023)
 # ------------------------------------------------------
 clear
-keyboardlayout="de-latin1"
+#keyboardlayout="de-latin1"
 zoneinfo="Europe/Berlin"
 hostname="arch"
 username="raabe"
@@ -35,7 +34,7 @@ pacman -Syy
 # ------------------------------------------------------
 # Install Packages
 # ------------------------------------------------------
-pacman -S --noconfirm  base-devel linux-headers grub efibootmgr networkmanager git xdg-{utils,user-dirs} pipewire pipewire-{alsa,jack,media-session,pulse} alsa-utils acpi acpi_call bluez bluez-utils bash-completion wpa_supplicant openssh spotify-launcher cups hplip pyqt5 needrestart eza pacman-contrib xorg-xhost vivaldi kitty qt5-wayland qt6-waylandand snap-pac grub-brtfs tlpui gnome-polkit waybar ttf-font-awesome variety pavucontrol tlp libnotify swayidle sddm blueman clight font-manager
+pacman -S --noconfirm  base-devel linux-headers grub efibootmgr networkmanager git xdg-{utils,user-dirs} pipewire pipewire-{alsa,jack,media-session,pulse} alsa-utils acpi acpi_call bluez bluez-utils bash-completion wpa_supplicant openssh spotify-launcher cups hplip pyqt5 needrestart eza pacman-contrib xorg-xhost vivaldi kitty qt5-wayland qt6-waylandand snap-pac grub-brtfs tlpui gnome-polkit waybar ttf-font-awesome variety pavucontrol tlp libnotify swayidle sddm blueman clight font-manager acpid
 
 # ------------------------------------------------------
 # set lang utf8 US
@@ -69,10 +68,9 @@ passwd root
 # Add User
 # ------------------------------------------------------
 echo "Add user $username"
-useradd -m -G wheel $username
+usermod -aG wheel,sys,rfkill $username
 passwd $username
-
-[stopped]
+sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
 # ------------------------------------------------------
 # Enable Services
@@ -98,29 +96,16 @@ grub-mkconfig -o /boot/grub/grub.cfg
 # ------------------------------------------------------
 # Before: BINARIES=()
 # After:  BINARIES=(btrfs setfont)
-sed -i 's/BINARIES=()/BINARIES=(btrfs setfont)/g' /etc/mkinitcpio.conf
-mkinitcpio -p linux
+sed -i 's/BINARIES=()/BINARIES=(btrfs setfont crc32c-intel)/g' /etc/mkinitcpio.conf
+mkinitcpio -p
 
 # ------------------------------------------------------
 # Add user to wheel
 # ------------------------------------------------------
-clear
-echo "Uncomment %wheel group in sudoers (around line 85):"
-echo "Before: #%wheel ALL=(ALL:ALL) ALL"
-echo "After:  %wheel ALL=(ALL:ALL) ALL"
-echo ""
-read -p "Open sudoers now?" c
-EDITOR=vim sudo -E visudo
-usermod -aG wheel $username
 
 # ------------------------------------------------------
 # Copy installation scripts to home directory 
 # ------------------------------------------------------
-cp /archinstall/3-yay.sh /home/$username
-cp /archinstall/4-zram.sh /home/$username
-cp /archinstall/5-timeshift.sh /home/$username
-cp /archinstall/6-preload.sh /home/$username
-cp /archinstall/snapshot.sh /home/$username
 
 clear
 echo "     _                   "
