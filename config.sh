@@ -34,8 +34,7 @@ read
 # ------------------------------------------------------
 # Install Packages
 # ------------------------------------------------------
-pacman -S --noconfirm  base-devel linux-headers grub efibootmgr networkmanager git xdg-{utils,user-dirs} pipewire pipewire-{alsa,jack,media-session,pulse} alsa-utils acpi acpi_call bluez bluez-utils bash-completion wpa_supplicant openssh spotify-launcher cups hplip pyqt5 eza pacman-contrib xorg-xhost vivaldi kitty qt5-wayland qt6-wayland snap-pac grub-brtfs tlpui gnome-polkit waybar ttf-font-awesome variety pavucontrol tlp libnotify swayidle sddm blueman clight font-manager acpid
-
+pacman -S --noconfirm  base-devel linux-headers grub efibootmgr networkmanager git xdg-{utils,user-dirs} pipewire pipewire-{alsa,jack,media-session,pulse} alsa-utils acpi acpi_call bluez bluez-utils bash-completion
 # ------------------------------------------------------
 # set lang utf8 US
 # ------------------------------------------------------
