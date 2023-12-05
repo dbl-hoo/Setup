@@ -8,11 +8,10 @@
 #  \____\___/|_| |_|_| |_|\__, |\__,_|_|  \__,_|\__|_|\___/|_| |_|
 #                         |___/                                   
 # ------------------------------------------------------
-clear
 #keyboardlayout="de-latin1"
-zoneinfo="Europe/Berlin"
+zoneinfo="America/New_York"
 hostname="arch"
-username="raabe"
+username="kirkham"
 
 # ------------------------------------------------------
 # Set System Time
@@ -30,11 +29,12 @@ reflector -c "US," -p https -a 3 --sort rate --save /etc/pacman.d/mirrorlist
 # Synchronize mirrors
 # ------------------------------------------------------
 pacman -Syy
+read
 
 # ------------------------------------------------------
 # Install Packages
 # ------------------------------------------------------
-pacman -S --noconfirm  base-devel linux-headers grub efibootmgr networkmanager git xdg-{utils,user-dirs} pipewire pipewire-{alsa,jack,media-session,pulse} alsa-utils acpi acpi_call bluez bluez-utils bash-completion wpa_supplicant openssh spotify-launcher cups hplip pyqt5 needrestart eza pacman-contrib xorg-xhost vivaldi kitty qt5-wayland qt6-waylandand snap-pac grub-brtfs tlpui gnome-polkit waybar ttf-font-awesome variety pavucontrol tlp libnotify swayidle sddm blueman clight font-manager acpid
+pacman -S --noconfirm  base-devel linux-headers grub efibootmgr networkmanager git xdg-{utils,user-dirs} pipewire pipewire-{alsa,jack,media-session,pulse} alsa-utils acpi acpi_call bluez bluez-utils bash-completion wpa_supplicant openssh spotify-launcher cups hplip pyqt5 eza pacman-contrib xorg-xhost vivaldi kitty qt5-wayland qt6-wayland snap-pac grub-brtfs tlpui gnome-polkit waybar ttf-font-awesome variety pavucontrol tlp libnotify swayidle sddm blueman clight font-manager acpid
 
 # ------------------------------------------------------
 # set lang utf8 US
@@ -43,11 +43,6 @@ echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 
-# ------------------------------------------------------
-# Set Keyboard
-# ------------------------------------------------------
-echo "FONT=ter-v18n" >> /etc/vconsole.conf
-echo "KEYMAP=$keyboardlayout" >> /etc/vconsole.conf
 
 # ------------------------------------------------------
 # Set hostname and localhost
@@ -79,11 +74,9 @@ systemctl enable NetworkManager
 systemctl enable bluetooth
 systemctl enable cups.service
 systemctl enable sshd
-systemctl enable avahi-daemon
 systemctl enable reflector.timer
 systemctl enable fstrim.timer
-systemctl enable firewalld
-systemctl enable acpid
+
 
 # ------------------------------------------------------
 # Grub installation
